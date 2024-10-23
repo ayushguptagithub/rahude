@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CMD Style Interface</title>
+  <!-- Bootstrap CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      background-color: #000;
+      color: #0f0;
+      font-family: 'Courier New', Courier, monospace;
+      overflow: hidden; /* Prevent scrolling */
+    }
+    .terminal-window {
+      border: 1px solid #0f0;
+      border-radius: 5px;
+      padding: 20px;
+      margin: 50px auto;
+      width: 90%;
+      max-width: 900px;
+      background-color: #111;
+      box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+      display: none; /* Hide terminal initially */
+    }
+    .prompt {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .input-line {
+      display: flex;
+      align-items: center;
+    }
+    .input-line span {
+      margin-right: 5px;
+    }
+    .terminal-content {
+      min-height: 400px;
+      max-height: 500px;
+      overflow-y: auto;
+      padding-right: 10px;
+    }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.8); /* Dark overlay */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10; /* Above all other content */
+    }
+    .password-prompt {
+      background-color: #222;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+    }
+    a {
+      color: #0f0;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Overlay for password prompt -->
+<div class="overlay" id="overlay">
+  <div class="password-prompt">
+    <p style="color: white;">Please enter the password:</p>
+    <input type="password" id="password-input" class="form-control" autofocus>
+  </div>
+</div>
+
+<!-- Terminal Interface -->
+<div class="container-fluid d-flex align-items-center justify-content-center vh-100">
+  <div class="terminal-window">
+    <div class="terminal-content">
+      <p class="prompt">C:\Users\User&gt; Welcome to the terminal</p>
+      <p class="prompt">C:\Users\User&gt; Type the experiment number to download the PDF</p>
+      <p class="prompt">C:\Users\User&gt; dir</p>
+      <p class="prompt"> Volume in drive C has no label.</p>
+      <p class="prompt"> Directory of C:\Users\User</p>
+      <p class="prompt"> 10/19/2024  08:25 AM    &lt;DIR&gt;          .</p>
+      <p class="prompt"> 10/19/2024  08:25 AM    &lt;DIR&gt;          ..</p>
+      <p class="prompt"> 10/19/2024  08:25 AM    &lt;DIR&gt;Exp 1 : To design a web page using HTML 5.0 having table, form, hyperlink and lists</p>
+      <p class="prompt"> 10/19/2024  08:25 AM    &lt;DIR&gt;Exp 2 : To design a web page using CSS3 with properties and styles</p>
+      <p class="prompt"> 10/19/2024  08:25 AM    &lt;DIR&gt;Exp 3 : Construct a responsive website using Bootstrap</p>
+      <p class="prompt"> 10/19/2024  08:25 AM    &lt;DIR&gt;Exp 4 : Develop web pages using Javascript</p>
+      <p class="prompt"> 10/19/2024  08:25 AM    &lt;DIR&gt;Exp 5 : Construct front end applications using React and back end using Node js</p>
+      <p class="prompt"> 10/19/2024  08:25 AM    &lt;DIR&gt;Exp 6 : Study and use network simulator CISCO Packet Tracer for network setup.</p>
+      <p class="prompt"> 10/19/2024  08:25 AM    &lt;DIR&gt;Exp 7 : To design and simulate the environment for Dynamic routing using Cisco packet tracer/ 
+        GNS3. </p>
+      <p class="prompt"> 10/19/2024  08:25 AM    &lt;DIR&gt;Exp 8 : To design and simulate VLANs on the switch/router using Cisco packet tracer/ GNS3.</p>
+      <p class="prompt"> 10/19/2024  08:25 AM    &lt;DIR&gt;Exp 9 : To design and simulate NAT on router using Cisco packet tracer/ GNS3.</p>
+      <p class="prompt"> 10/19/2024  08:25 AM    &lt;DIR&gt;Exp 10: To  simulate Software Defined Network using Mininet. </p>
+      <p class="prompt"> 10/19/2024  08:25 AM    &lt;DIR&gt; Which experiment number ?</p>
+    </div>
+
+    <div class="input-line">
+      <span>C:\Users\User&gt;</span>
+      <input type="text" placeholder="eg. 7" class="form-control bg-dark text-success border-0" id="cmd-input" autofocus>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const correctPassword = 'home'; // Set your password here
+  const overlay = document.getElementById('overlay');
+  const passwordInput = document.getElementById('password-input');
+  const terminalWindow = document.querySelector('.terminal-window');
+
+  // Function to handle password input
+  function handlePasswordInput(event) {
+    if (event.key === 'Enter') {
+      if (passwordInput.value === correctPassword) {
+        overlay.style.display = 'none'; // Hide the overlay
+        terminalWindow.style.display = 'block'; // Show the terminal
+      } else {
+        const terminalContent = document.querySelector(".terminal-content");
+        const errorPrompt = document.createElement("p");
+        errorPrompt.classList.add("prompt");
+        errorPrompt.textContent = "C:\\Users\\User> Incorrect password. Please try again.";
+        terminalContent.appendChild(errorPrompt);
+        passwordInput.value = ''; // Clear input
+      }
+    }
+  }
+
+  // Show password prompt on load
+  window.onload = function() {
+    overlay.style.display = 'flex'; // Show the overlay
+    passwordInput.focus(); // Focus on password input
+    passwordInput.addEventListener('keypress', handlePasswordInput);
+  };
+
+  // Command input handling
+  document.getElementById("cmd-input").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+      const inputValue = event.target.value.trim();
+      const terminalContent = document.querySelector(".terminal-content");
+      const experimentNumber = `exp-${inputValue}.pdf`; // PDF file format
+
+      // Add new line with the command
+      const newPrompt = document.createElement("p");
+      newPrompt.classList.add("prompt");
+      newPrompt.textContent = "C:\\Users\\User> " + inputValue;
+      terminalContent.appendChild(newPrompt);
+
+      // Clear input field
+      event.target.value = "";
+
+      // Check if input is a number and valid
+      if (isNaN(inputValue) || inputValue === "") {
+        const errorPrompt = document.createElement("p");
+        errorPrompt.classList.add("prompt");
+        errorPrompt.textContent = "Invalid experiment number. Please enter a valid number.";
+        terminalContent.appendChild(errorPrompt);
+      } else {
+        // Generate the download link and append it to the terminal
+        const downloadLink = document.createElement("a");
+        downloadLink.href = `./pdfs/${experimentNumber}`; // Assuming PDF files are stored in the 'pdfs' directory
+        downloadLink.download = experimentNumber;
+        downloadLink.textContent = `Download ${experimentNumber}`;
+        terminalContent.appendChild(downloadLink);
+
+        // Simulate clicking the link to trigger download
+        downloadLink.click();
+      }
+
+      // Scroll to bottom
+      terminalContent.scrollTop = terminalContent.scrollHeight;
+    }
+  });
+</script>
+
+</body>
+</html>
